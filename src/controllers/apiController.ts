@@ -37,3 +37,24 @@ export const register = async (req: Request, res: Response) => {
         res.json({error});
     }
 }
+
+export const login = async (req: Request, res: Response) => {
+    if(!req.body.email || !req.body.password){
+        return res.json({ status: false});
+    }
+    try{
+        let email: string = req.body.email;
+        let password: string = req.body.password;
+        
+        const user = await prisma.user.findUnique({
+            where: {email, password}
+        });
+        if(user){
+            return res.json({status: true});
+        }
+        return res.json({status: false});
+        
+    }catch(error){
+        res.json({error});
+    }
+}
