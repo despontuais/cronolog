@@ -3,6 +3,7 @@ import path from 'path';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import passport from 'passport';
+import apiRoutes from './routes/api';
 
 dotenv.config();
 
@@ -13,6 +14,8 @@ server.use(express.static(path.join(__dirname, '../public')));
 server.use(express.urlencoded({extended: true}));
 
 server.use(passport.initialize());
+
+server.use(apiRoutes);
 
 const errorHandler: ErrorRequestHandler = (err, req: Request, res: Response, next) => {
     err.status ? res.status(err.status) : res.status(400);
