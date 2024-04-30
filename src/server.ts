@@ -22,4 +22,5 @@ const errorHandler: ErrorRequestHandler = (err, req: Request, res: Response, nex
     err.message ? res.json({error: err.message}) : res.json({ error: 'Ocorreu algum erro.' });
 }
 server.use(errorHandler);
+
 server.listen(process.env.PORT);
