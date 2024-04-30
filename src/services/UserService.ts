@@ -1,11 +1,7 @@
 import { Prisma, User } from "@prisma/client";
 import { prisma } from "../libs/prisma";
 import bcrypt from 'bcrypt';
-import logger from "../libs/logger";
-import dotenv from 'dotenv';
 import validator from 'validator';
-
-dotenv.config();
 
 export const createUser = async (email: string, password: string, name?: string) =>{
     if(!validator.isEmail(email)){
