@@ -1,7 +1,7 @@
 import {Request, Response} from 'express';
 import dotenv from 'dotenv';
-import { prisma } from '../libs/prisma';
-import { Prisma, User } from '@prisma/client';
+import * as UserService from '../services/UserService';
+import logger from '../libs/logger';
 
 dotenv.config();
 
@@ -14,27 +14,18 @@ export const register = async (req: Request, res: Response) => {
         return res.json({ error: 'E-mail e/ou senha não enviados.' });
     }
     try{
-        let user: Prisma.UserCreateInput;
-        let name: string = req.body.name;
-        let email: string = req.body.email;
-        let password: string = req.body.password;
-        user = {
-            name,
-            email,
-            password,
+        let {email, password, name} = req.body;
+        const newUser = await UserService.createUser(email, password, name);
+        if(newUser instanceof Error){
+            res.json({error: newUser.message});
+            logger.error({error: newUser.message});
+            return;
         }
-        const hasUser: User | null = await prisma.user.findUnique({
-            where: {
-                email,
-            },
-        });
-        if(hasUser){
-            return res.json({error: "E-mail já cadastrado"});
-        }
-        let newUser = await prisma.user.create({data: user});
+        logger.info({id: newUser.id});
         return res.status(201).json({id: newUser.id});
     }catch(error){
         res.json({error});
+        logger.error({error});
     }
 }
 
@@ -45,11 +36,9 @@ export const login = async (req: Request, res: Response) => {
     try{
         let email: string = req.body.email;
         let password: string = req.body.password;
-        
-        const user = await prisma.user.findUnique({
-            where: {email, password}
-        });
-        if(user){
+        const user = await UserService.findByEmail(email);
+
+        if(user && await UserService.matchPassword(password, user.password)){
             return res.json({status: true});
         }
         return res.json({status: false});
