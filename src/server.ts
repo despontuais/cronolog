@@ -15,7 +15,7 @@ server.use(express.urlencoded({extended: true}));
 
 server.use(passport.initialize());
 
-server.use(apiRoutes);
+server.use('/api', apiRoutes);
 
 const errorHandler: ErrorRequestHandler = (err, req: Request, res: Response, next) => {
     err.status ? res.status(err.status) : res.status(400);

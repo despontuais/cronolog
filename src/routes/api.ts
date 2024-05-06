@@ -3,7 +3,7 @@ import * as ApiController from '../controllers/apiController';
 
 const router = Router();
 
-router.post('/ping', ApiController.ping);
+router.get('/ping', ApiController.ping);
 
 router.post('/register', ApiController.register);
 
