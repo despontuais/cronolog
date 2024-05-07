@@ -39,11 +39,22 @@ export const login = async (req: Request, res: Response) => {
         const user = await UserService.findByEmail(email);
 
         if(user && await UserService.matchPassword(password, user.password)){
-            return res.json({status: true});
+            return res.status(200).json({status: true});
         }
-        return res.json({status: false});
+        return res.json({status: false}); 
         
     }catch(error){
         res.json({error});
     }
+}
+
+export const getUser = async (req: Request, res: Response) => {
+    let id = parseInt(req.params.id);
+    const user = await UserService.findById(id);
+    return res.status(200).json({test: user});
+}
+
+export const listUsers = async (req: Request, res: Response) => {
+    const users = await UserService.findAll();
+    return res.status(200).json({users});
 }
