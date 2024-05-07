@@ -15,25 +15,22 @@ describe('Testing user service', () => {
     
     let email2 = 'anothertest@test.com';
     let password2 = '4050';
+    let name2 = '';
 
     it('should create a new user (with a name)', async () => {
         const newUser = await UserService.createUser(email, password, name) as User;
         expect(newUser).not.toBeInstanceOf(Error);
-        expect(newUser).toHaveProperty('id');
         expect(newUser.email).toBe(email);
         expect(newUser.name).toBe(name);
     });
 
-    it('should create a new user (with "Unknown" as name)', async () => {
-        const newUser = await UserService.createUser(email2, password2) as User;
-        expect(newUser).not.toBeInstanceOf(Error);
-        expect(newUser).toHaveProperty('id');
-        expect(newUser.email).toBe(email2);
-        expect(newUser.name).toBe("Unknown");
+    it('should not create a new user without a name', async () => {
+        const newUser = await UserService.createUser(email2, password2, name2) as User;
+        expect(newUser).toBeInstanceOf(Error);
     });
 
     it('should not allow to create a user with existing email', async () => {
-        const newUser = await UserService.createUser(email, password);
+        const newUser = await UserService.createUser(email, password, name);
         expect(newUser).toBeInstanceOf(Error);
     });
 

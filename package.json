@@ -5,7 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "set NODE_ENV=test& jest --runInBand",
-    "start-dev": "nodemon -e ts,json src/server.ts"
+    "dev": "nodemon",
+    "build": "tsc",
+    "start": "node build/server.js",
+    "migrate:dev": "prisma migrate dev",
+    "migrate:deploy": "prisma migrate deploy",
+    "resolve-imports": "ts-add-js-extension --dir=dist"
   },
   "keywords": [],
   "author": "",
@@ -18,6 +23,7 @@
     "jsonwebtoken": "^9.0.2",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
+    "pm2": "^5.3.1",
     "typescript": "^5.4.5",
     "validator": "^13.11.0"
   },
