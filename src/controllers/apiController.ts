@@ -17,7 +17,7 @@ export const register = async (req: Request, res: Response) => {
         let {email, password, name, birthDate} = req.body;
         const newUser = await UserService.createUser(email, password, name, birthDate);
         if(newUser instanceof Error){
-            res.json({error: newUser.message});
+            res.status(400).json({error: newUser.message});
             logger.error({error: newUser.message});
             return;
         }
@@ -31,13 +31,12 @@ export const register = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
     if(!req.body.email || !req.body.password){
-        return res.json({ status: false});
+        return res.status(401).json({status: false});
     }
     try{
         let email: string = req.body.email;
         let password: string = req.body.password;
         const user = await UserService.findByEmail(email);
-
         if(user && await UserService.matchPassword(password, user.Senha)){
             return res.status(200).json({status: true});
         }
