@@ -2,6 +2,8 @@ import {Request, Response} from 'express';
 import dotenv from 'dotenv';
 import * as UserService from '../services/UserService';
 import logger from '../libs/logger';
+import { generateToken } from '../config/passport';
+
 
 dotenv.config();
 
@@ -38,7 +40,8 @@ export const login = async (req: Request, res: Response) => {
         let password: string = req.body.password;
         const user = await UserService.findByEmail(email);
         if(user && await UserService.matchPassword(password, user.Senha)){
-            return res.status(200).json({status: true});
+            const token = generateToken({id: user.ID_Usuario});
+            return res.status(200).json({status: true, token});
         }
         return res.json({status: false}); 
         
