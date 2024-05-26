@@ -2,30 +2,39 @@ import { Prisma, Usuario } from "@prisma/client";
 import { prisma } from "../libs/prisma";
 import bcrypt from 'bcrypt';
 import validator from 'validator';
-import logger from "../libs/logger";
+import moment from "moment";
 
-export const createUser = async (email: string, password: string, name: string, birthDate: string) =>{
+export const createUser = async (email: string, password: string, name: string, birthDateString: string) =>{
+    
+    //email validation
     if(!validator.isEmail(email)){
         return new Error('E-mail inválido');
     }
-    if(!name || validator.isEmpty(name)){
-        return new Error('Insira um nome de usuário');
-    }
-
-    if(!birthDate || validator.isDate(birthDate.toString(), {format: "DD/MM/YYYY", strictMode: true})){
-        return new Error('Data de nascimento inválida!');
-    }
-    let DT_nascimento = dateHandler(birthDate);
-    logger.info(DT_nascimento);
-
     const hasUserEmail: Usuario | null = await findByEmail(email);
-    const hasUserName: Usuario | null = await prisma.usuario.findUnique({where: {Nome_Usuario: name}});
     if(hasUserEmail){
-        return new Error('E-mail já cadastrado');
+        return new Error('E-mail ja cadastrado');
     }
+
+    //username validation
+    if(!name || validator.isEmpty(name)){
+        return new Error('Nome de usuario nao pode ser nulo');
+    }
+    const hasUserName: Usuario | null = await prisma.usuario.findUnique({where: {Nome_Usuario: name}});
     if(hasUserName){
         return new Error('Nome de usuário já utilizado');
     }
+
+    //birth validation
+    if(!birthDateString){
+        return new Error('Data de nascimento nao pode ser nula.');
+    }
+    let dateMomentObject = moment(birthDateString, "DD/MM/YYYY");
+   if(!dateMomentObject.isValid()){
+        return new Error('Data de nascimento invalida');
+    }
+    let DT_nascimento = dateMomentObject.toDate();
+
+
     const hash = bcrypt.hashSync(password, 10);
     const user: Prisma.UsuarioCreateInput = {
         Email: email,
@@ -51,11 +60,4 @@ export const findAll = async () => {
 
 export const matchPassword = async (passwordText: string, encrypted: string) => {
     return bcrypt.compareSync(passwordText, encrypted);
-}
-
-const dateHandler = (birthDateString: string): Date => {
-    let dateArray = birthDateString.split('/').reverse();
-    let birthDate = new Date(dateArray.join("-"));
-
-    return birthDate;
 }
