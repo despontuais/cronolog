@@ -1,17 +1,25 @@
-import { Prisma, User } from "@prisma/client";
+import { Prisma, Usuario } from "@prisma/client";
 import { prisma } from "../libs/prisma";
 import bcrypt from 'bcrypt';
 import validator from 'validator';
+import logger from "../libs/logger";
 
-export const createUser = async (email: string, password: string, name: string) =>{
+export const createUser = async (email: string, password: string, name: string, birthDate: string) =>{
     if(!validator.isEmail(email)){
         return new Error('E-mail inválido');
     }
     if(!name || validator.isEmpty(name)){
-        return new Error('Nome de usuário vazio');
+        return new Error('Insira um nome de usuário');
     }
-    const hasUserEmail: User | null = await prisma.user.findUnique({where: {email}});
-    const hasUserName: User | null = await prisma.user.findUnique({where: {name}});
+
+    if(!birthDate || validator.isDate(birthDate.toString(), {format: "DD/MM/YYYY", strictMode: true})){
+        return new Error('Data de nascimento inválida!');
+    }
+    let DT_nascimento = dateHandler(birthDate);
+    logger.info(DT_nascimento);
+
+    const hasUserEmail: Usuario | null = await findByEmail(email);
+    const hasUserName: Usuario | null = await prisma.usuario.findUnique({where: {Nome_Usuario: name}});
     if(hasUserEmail){
         return new Error('E-mail já cadastrado');
     }
@@ -19,28 +27,35 @@ export const createUser = async (email: string, password: string, name: string) 
         return new Error('Nome de usuário já utilizado');
     }
     const hash = bcrypt.hashSync(password, 10);
-    const user: Prisma.UserCreateInput = {
-        email,
-        password: hash,
-        name
+    const user: Prisma.UsuarioCreateInput = {
+        Email: email,
+        Senha: hash,
+        Nome_Usuario: name,
+        DT_nascimento
     };
-    const newUser = await prisma.user.create({data: user})
+    const newUser = await prisma.usuario.create({data: user})
     return newUser;
 }
 
 export const findByEmail = async (email: string) => {
-    return await prisma.user.findUnique({where: {email}});
+    return await prisma.usuario.findUnique({where: {Email: email}});
 }
 
 export const findById = async (id: number) => {
-    return await prisma.user.findUnique({where: {id}, select: {id: true, email: true, role: true}});
+    return await prisma.usuario.findUnique({where: {ID_Usuario: id}, select: {ID_Usuario: true, Email: true}});
 }
 
 export const findAll = async () => {
-    return await prisma.user.findMany({select: {id: true, email: true, role: true}});
+    return await prisma.usuario.findMany({select: {ID_Usuario: true, Email: true}});
 }
 
 export const matchPassword = async (passwordText: string, encrypted: string) => {
     return bcrypt.compareSync(passwordText, encrypted);
 }
 
+const dateHandler = (birthDateString: string): Date => {
+    let dateArray = birthDateString.split('/').reverse();
+    let birthDate = new Date(dateArray.join("-"));
+
+    return birthDate;
+}

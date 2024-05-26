@@ -14,15 +14,15 @@ export const register = async (req: Request, res: Response) => {
         return res.json({ error: 'E-mail e/ou senha não enviados.' });
     }
     try{
-        let {email, password, name} = req.body;
-        const newUser = await UserService.createUser(email, password, name);
+        let {email, password, name, birthDate} = req.body;
+        const newUser = await UserService.createUser(email, password, name, birthDate);
         if(newUser instanceof Error){
             res.json({error: newUser.message});
             logger.error({error: newUser.message});
             return;
         }
-        logger.info({id: newUser.id});
-        return res.status(201).json({id: newUser.id});
+        logger.info({id: newUser.ID_Usuario});
+        return res.status(201).json({id: newUser.ID_Usuario});
     }catch(error){
         res.json({error});
         logger.error({error});
@@ -38,7 +38,7 @@ export const login = async (req: Request, res: Response) => {
         let password: string = req.body.password;
         const user = await UserService.findByEmail(email);
 
-        if(user && await UserService.matchPassword(password, user.password)){
+        if(user && await UserService.matchPassword(password, user.Senha)){
             return res.status(200).json({status: true});
         }
         return res.json({status: false}); 
