@@ -7,12 +7,12 @@ export const createTimeline = async (req: Request, res: Response) => {
     if (!user) {
         return res.redirect('/');
     }
-    const nome = req.body.nome as string;
+    // troquei para "name" na request
+    const nome = req.body.name as string;
     try {
-        const hasTimeline: Linha_do_tempo | null = await findByName(nome);
-        if (hasTimeline) {
-            return res.status(400).json({ error: "Essa timeline já existe" });
-        }
+    	if(await timelineExists(nome)) {
+        	return res.status(400).json({"error": "Essa timeline já existe"})
+	}
         const data: Prisma.Linha_do_tempoCreateInput = {
             ID_Usuario: user.ID_Usuario,
             Nome: nome,
@@ -26,8 +26,16 @@ export const createTimeline = async (req: Request, res: Response) => {
 };
 
 export const findByName = async (name: string) => {
-    return await prisma.linha_do_tempo.findUnique({ where: { Nome: name } });
-};
+    return await prisma.linha_do_tempo.findUnique({where: {Nome: name}});
+}
+
+export const timelineExists = async (name: string) => {
+    const hasTimeline: Linha_do_tempo | null = await findByName(name);
+    if (hasTimeline != null) {
+        return true
+    }
+    return false
+}
 
 export const getTimelines = async (req: Request, res: Response) => {
     const user = req.user as Usuario;

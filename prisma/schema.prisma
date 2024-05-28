@@ -33,10 +33,14 @@ model Linha_do_tempo {
 
 model Midia {
   ID_Midia      Int      @id @unique @default(autoincrement())
+  ID_LinhaTempo Int 
   Titulo        String   @db.VarChar(255)
-  Tipo          String   @db.VarChar(255)
-  DT_Lancamento DateTime @db.Date
+  Tipo          String?   @db.VarChar(255)
+  DT_Lancamento DateTime? @db.Date
   ID_API        Int
+
+  @@index([ID_LinhaTempo], map: "FK_ID_LinhaTempo")
+  @@unique([ID_API, ID_LinhaTempo])
 }
 
 model Segue {
