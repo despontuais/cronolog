@@ -6,6 +6,7 @@ import passport from 'passport';
 import siteRoutes from './routes/site';
 import apiRoutes from './routes/api';
 import tmdbRoutes from './routes/tmdb';
+import timelineRoutes from './routes/timeline';
 import https from 'https';
 import http from 'http';
 import fs from 'fs';
@@ -23,6 +24,7 @@ app.use(express.urlencoded({extended: true}));
 app.use('/', siteRoutes);
 app.use('/api', apiRoutes);
 app.use('/tmdb', tmdbRoutes);
+app.use('/timeline', timelineRoutes);
 
 
 const runServer = (port: number, server: http.Server) => {

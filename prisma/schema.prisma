@@ -7,9 +7,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model Comentario {
-  ID_Comentario Int       @id @unique @default(autoincrement())
+  ID_Comentario Int      @id @unique @default(autoincrement())
   ID_Usuario    Int
   ID_Midia      Int
   Texto         String   @db.VarChar(255)
@@ -20,10 +19,11 @@ model Comentario {
 }
 
 model Linha_do_tempo {
-  ID_LinhaTempo Int      @id @unique @default(autoincrement())
+  ID_LinhaTempo Int       @id @unique @default(autoincrement())
   ID_Usuario    Int
-  ID_Midia      Int
-  Descricao     String   @db.Text
+  ID_Midia      Int?
+  Nome          String    @unique @db.VarChar(255)
+  Descricao     String?   @db.Text
   Classificacao String?   @db.VarChar(255)
   DT_Comentario DateTime? @db.Date
 
@@ -36,11 +36,11 @@ model Midia {
   Titulo        String   @db.VarChar(255)
   Tipo          String   @db.VarChar(255)
   DT_Lancamento DateTime @db.Date
-  ID_API        Int      
+  ID_API        Int
 }
 
 model Segue {
-  ID_Segue    Int  @id @unique @default(autoincrement())
+  ID_Segue    Int @id @unique @default(autoincrement())
   ID_Seguidor Int
   ID_Seguido  Int
 
@@ -49,8 +49,8 @@ model Segue {
 
 model Usuario {
   ID_Usuario    Int      @id @default(autoincrement())
-  Nome_Usuario  String   @db.VarChar(255) @unique
-  Email         String   @db.VarChar(255) @unique
+  Nome_Usuario  String   @unique @db.VarChar(255)
+  Email         String   @unique @db.VarChar(255)
   Senha         String   @db.VarChar(255)
   DT_nascimento DateTime @db.Date
 }
