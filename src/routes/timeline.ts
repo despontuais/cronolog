@@ -4,6 +4,8 @@ import { privateRoute } from '../config/passport';
 
 const router = Router();
 
-router.post('/createTimeline', privateRoute, TimelineController.createTimeline);
+router.post('/timeline', privateRoute, TimelineController.createTimeline);
+
+router.get('/timelines',privateRoute, TimelineController.getTimelines )
 
 export default router;

@@ -9,29 +9,48 @@
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <div class="logo">CronoLog</div>
-            <div class="profile">
-                <button id="expandProfile">Perfil Expandir</button>
+        <div class="header d-flex justify-content-between align-items-center">
+            <div class="logo">
+                <img src="LOGO2.png" alt="Logo" />
+            </div>
+            <div class="d-flex align-items-center">
+                <button id="criarTimeline" class="btn btn-primary me-2">Criar Timeline</button>
+                <button id="expandProfile" class="btn btn-secondary">Perfil Expandir</button>
             </div>
         </div>
-        <div class="tabs">
+        <div class="tabs mt-3">
             <button class="tab active" data-tab="populares">Populares</button>
             <button class="tab" data-tab="pesquisa">Pesquisa</button>
         </div>
-        <div class="search-container">
+        <div class="search-container mt-3">
             <form action="/search" method="GET">
                 <input type="text" id="query" name="q" required>
                 <button type="submit">Buscar!</button>
             </form>
         </div>
-        <div class="results">
-            <div class="no-results">
+        
+        <div class="results mt-3">
+            <div class="no-results text-center">
                 <img src="ghost.png" alt="No Results">
                 <p>Sem resultados</p>
             </div>
         </div>
     </div>
+
+    <!-- Popup Form -->
+    <div id="popupForm" class="popup">
+        <div class="popup-content">
+            <span class="close" id="closePopup">&times;</span>
+            <form id="createTimelineForm">
+                <div class="mb-3">
+                    <label for="timelineName" class="form-label">Nome da Timeline:</label>
+                    <input type="text" id="timelineName" name="nome" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Criar</button>
+            </form>
+        </div>
+    </div>
+
     <script src="dist/script.js"></script>
 </body>
 </html>

@@ -6,21 +6,20 @@ const router = Router();
 const prisma = new PrismaClient();
 
 async function searchFromDatabase(query: string): Promise<string[]> {
-    const notas = await prisma.linha_do_tempo.findMany({
+    const results = await prisma.linha_do_tempo.findMany({
         where: {
-            Notas: {
+            Descricao: {
                 contains: query,
             }
         },
         select: {
-            Notas: true
+            Descricao: true
         }
     });
-    return notas
-        .filter(nota => nota.Notas !== null)
-        .map(nota => nota.Notas!);
+    return results
+        .filter(result => result.Descricao !== null)
+        .map(result => result.Descricao!);
 }
-
 router.get('/search', async (req: Request, res: Response) => {
     const query = req.query.q as string;
     if (!query) {

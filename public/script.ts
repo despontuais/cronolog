@@ -3,6 +3,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('searchInput') as HTMLInputElement;
     const resultsContainer = document.querySelector('.results') as HTMLDivElement;
     const searchForm = document.querySelector('.search-container form') as HTMLFormElement; // Importação do fomrulário localizado no search.html
+    const criarTimelineButton = document.getElementById('criarTimeline') as HTMLButtonElement;
+    const closePopupButton = document.getElementById('closePopup') as HTMLSpanElement;
+    const popupForm = document.getElementById('popupForm') as HTMLDivElement;
+    const createTimelineForm = document.getElementById('createTimelineForm') as HTMLFormElement;
 
     searchForm.addEventListener('submit', async (event) => {
         event.preventDefault(); // Impede o comportamento padrão de envio do formulário
@@ -21,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     function displayResults(results: string[]) {
-        const resultsContainer = document.querySelector('.results');
+        const resultsContainer = document.querySelector('.results') as HTMLDivElement;
     
         // Limpar resultados anteriores
         if (resultsContainer) {
@@ -52,6 +56,46 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Contêiner de resultados não encontrado.');
         }
     }
-    
-    
+
+    criarTimelineButton.addEventListener('click', () => {
+        popupForm.style.display = 'flex';
+    });
+
+    closePopupButton.addEventListener('click', () => {
+        popupForm.style.display = 'none';
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target === popupForm) {
+            popupForm.style.display = 'none';
+        }
+    });
+
+    createTimelineForm.addEventListener('submit', async (event) => {
+        event.preventDefault(); // Impede o comportamento padrão de envio do formulário
+        const formData = new FormData(createTimelineForm);
+        const nome = formData.get('nome'); // 'nome' deve corresponder ao campo esperado pelo backend
+
+        try {
+            const response = await fetch('/timeline', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ nome })
+            });
+
+            if (response.ok) {
+                alert('Timeline criada com sucesso!');
+                popupForm.style.display = 'none';
+                createTimelineForm.reset();
+            } else {
+                const errorData = await response.json();
+                alert(`Erro ao criar timeline: ${errorData.error}`);
+            }
+        } catch (error) {
+            console.error('Erro ao criar timeline:', error);
+            alert('Erro ao criar timeline. Por favor, tente novamente.');
+        }
+    });
 });
