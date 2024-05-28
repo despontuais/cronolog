@@ -22,6 +22,7 @@ export const createMidia = async (req: Request, res: Response) => {
         ID_LinhaTempo: timelineID?.ID_LinhaTempo as number,
         Titulo: movie[0].title as string,
     }
-    const newTimeline = await prisma.midia.create({data})
-    return res.status(201).json(newTimeline);
+
+    const newMidia = await prisma.midia.create({data})
+    return res.status(201).json(newMidia);
 }
