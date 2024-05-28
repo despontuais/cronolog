@@ -9,6 +9,11 @@ import https from 'https';
 import http from 'http';
 import fs from 'fs';
 import logger from './libs/logger';
+import * as apiController from './controllers/apiController'; 
+import searchRoutes from './routes/searchRoutes';
+
+
+
 
 dotenv.config();
 
@@ -17,16 +22,22 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, '../public/login.html')));
 app.use(express.urlencoded({extended: true}));
+app.use('/', searchRoutes);
 
 app.use('/', siteRoutes);
 app.use('/api', apiRoutes);
+
+app.post('/register', apiController.register);
+
+
 
 
 
 const runServer = (port: number, server: http.Server) => {
     server.listen(port, () => {
-        logger.info(`Running at PORT ${port}`)
+        logger.info(`Servidor rodando na porta ${port}`)
     });
 }
 

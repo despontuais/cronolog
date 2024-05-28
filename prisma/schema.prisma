@@ -7,15 +7,47 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  USER
-  ADMIN
+model comentario {
+  ID_Comentario Int       @id @unique @default(autoincrement())
+  ID_Usuario    Int?
+  ID_Midia      Int?
+  Texto         String?   @db.VarChar(255)
+  DT_Comentario DateTime? @db.Date
+
+  @@index([ID_Midia], map: "FK_ID_Midia")
+  @@index([ID_Usuario], map: "FK_ID_Usuario")
 }
 
-model User {
-  id       Int    @id @unique @default(autoincrement())
-  name     String @unique
-  email    String @unique
+model linha_do_tempo {
+  ID_LinhaTempo Int       @id @unique @default(autoincrement())
+  ID_Usuario    Int?
+  ID_Midia      Int?
+  Notas         String?   @db.VarChar(255)
+  Classificacao String?   @db.VarChar(255)
+  DT_Comentario DateTime? @db.Date
+
+  @@index([ID_Midia], map: "FK_ID_Midia")
+  @@index([ID_Usuario], map: "FK_ID_Usuario")
+}
+
+model midia {
+  ID_Midia      Int       @id @unique @default(autoincrement())
+  Titulo        String?   @db.VarChar(255)
+  Tipo          String?   @db.VarChar(255)
+  DT_Lancamento DateTime? @db.Date
+}
+
+model segue {
+  ID_Segue    Int  @id @unique @default(autoincrement())
+  ID_Seguidor Int?
+  ID_Seguido  Int?
+
+  @@index([ID_Seguidor, ID_Seguido], map: "FK_ID_Usuario")
+}
+
+model user {
+  id       Int    @id @unique(map: "User_id_key") @default(autoincrement())
+  name     String @unique(map: "User_name_key")
+  email    String @unique(map: "User_email_key")
   password String
-  role     Role   @default(USER)
 }

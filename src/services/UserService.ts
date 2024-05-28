@@ -33,11 +33,11 @@ export const findByEmail = async (email: string) => {
 }
 
 export const findById = async (id: number) => {
-    return await prisma.user.findUnique({where: {id}, select: {id: true, email: true, role: true}});
+    return await prisma.user.findUnique({where: {id}, select: {id: true, email: true}});
 }
 
 export const findAll = async () => {
-    return await prisma.user.findMany({select: {id: true, email: true, role: true}});
+    return await prisma.user.findMany({select: {id: true, email: true}});
 }
 
 export const matchPassword = async (passwordText: string, encrypted: string) => {
