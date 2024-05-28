@@ -7,6 +7,7 @@ import siteRoutes from './routes/site';
 import apiRoutes from './routes/api';
 import tmdbRoutes from './routes/tmdb';
 import timelineRoutes from './routes/timeline';
+import midiaRoutes from './routes/midia';
 import https from 'https';
 import http from 'http';
 import fs from 'fs';
@@ -25,7 +26,7 @@ app.use('/', siteRoutes);
 app.use('/api', apiRoutes);
 app.use('/tmdb', tmdbRoutes);
 app.use('/timeline', timelineRoutes);
-
+app.use('/midia', midiaRoutes);
 
 const runServer = (port: number, server: http.Server) => {
     server.listen(port, () => {

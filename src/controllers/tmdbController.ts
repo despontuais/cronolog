@@ -17,8 +17,16 @@ export const search = async (req: Request, res: Response) => {
         // handle error
      }
 }
-  
 
+export const searchByQuery = async (query: string) => {
+    try {
+        const movies = await tmdb.search.movies({query, page: 1})
+        return JSON.stringify(movies.results);
+     } catch(err) {
+        // handle error
+     }
+}
+  
 export const details = async (req: Request, res: Response) => {
         const query = req.query.id as string;
     try {
