@@ -38,10 +38,10 @@
     </div>
 
     <!-- Popup Form -->
-    <div id="popupForm" class="popup">
+    <div id="popupForm" class="popup" style="display: none;">
         <div class="popup-content">
             <span class="close" id="closePopup">&times;</span>
-            <form id="createTimelineForm">
+            <form id="createTimelineForm" action="/timeline" method="POST">
                 <div class="mb-3">
                     <label for="timelineName" class="form-label">Nome da Timeline:</label>
                     <input type="text" id="timelineName" name="nome" class="form-control" required>
@@ -50,6 +50,36 @@
             </form>
         </div>
     </div>
+</div>
+<script>
+    document.getElementById('createTimelineForm').addEventListener('submit', async (event) => {
+        event.preventDefault(); // Impede o comportamento padrão de envio do formulário
+
+        const formData = new FormData(event.target);
+        const nome = formData.get('nome'); // 'nome' deve corresponder ao campo esperado pelo backend
+
+        try {
+            const response = await fetch('/timeline', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ nome }) // Certifique-se de enviar o nome da timeline corretamente
+            });
+
+            if (response.ok) {
+                alert('Timeline criada com sucesso!');
+                event.target.reset(); // Limpa os campos do formulário após o envio bem-sucedido
+            } else {
+                const errorData = await response.json();
+                alert(`Erro ao criar timeline: ${errorData.error}`);
+            }
+        } catch (error) {
+            console.error('Erro ao criar timeline:', error);
+            alert('Erro ao criar timeline. Verifique o console para mais detalhes.');
+        }
+    });
+</script>
 
     <script src="dist/script.js"></script>
 </body>

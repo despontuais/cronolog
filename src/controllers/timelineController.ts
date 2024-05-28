@@ -7,22 +7,25 @@ export const createTimeline = async (req: Request, res: Response) => {
     if (!user) {
         return res.redirect('/');
     }
-    // troquei para "name" na request
+
     const nome = req.body.name as string;
-    try {
-    	if(await timelineExists(nome)) {
-        	return res.status(400).json({"error": "Essa timeline já existe"})
-	}
-        const data: Prisma.Linha_do_tempoCreateInput = {
-            ID_Usuario: user.ID_Usuario,
-            Nome: nome,
-        };
-        const newTimeline = await prisma.linha_do_tempo.create({ data });
-        return res.status(201).json(newTimeline);
-    } catch (error) {
-        console.error('Erro ao criar timeline:', error);
-        return res.status(500).json({ error: "Erro ao criar timeline" });
+
+    if (!nome) {
+        return res.status(400).json({ error: "O nome da timeline é obrigatório" });
     }
+
+    const hasTimeline: Linha_do_tempo | null = await findByName(nome);
+    if (hasTimeline) {
+        return res.status(400).json({ error: "Essa timeline já existe" });
+    }
+
+    const data: Prisma.Linha_do_tempoCreateInput = {
+        ID_Usuario: user.ID_Usuario,
+        Nome: nome,
+    };
+
+    const newTimeline = await prisma.linha_do_tempo.create({ data });
+    return res.status(201).json(newTimeline);
 };
 
 export const findByName = async (name: string) => {

@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchButton = document.getElementById('searchButton') as HTMLButtonElement;
     const searchInput = document.getElementById('searchInput') as HTMLInputElement;
     const resultsContainer = document.querySelector('.results') as HTMLDivElement;
-    const searchForm = document.querySelector('.search-container form') as HTMLFormElement; // Importação do fomrulário localizado no search.html
+    const searchForm = document.querySelector('.search-container form') as HTMLFormElement;
     const criarTimelineButton = document.getElementById('criarTimeline') as HTMLButtonElement;
     const closePopupButton = document.getElementById('closePopup') as HTMLSpanElement;
     const popupForm = document.getElementById('popupForm') as HTMLDivElement;
@@ -23,10 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Erro ao buscar resultados:', error);
         }
     });
-    
+
     function displayResults(results: string[]) {
-        const resultsContainer = document.querySelector('.results') as HTMLDivElement;
-    
         // Limpar resultados anteriores
         if (resultsContainer) {
             resultsContainer.innerHTML = '';
@@ -44,12 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 results.forEach(result => {
                     const resultItem = document.createElement('div');
                     resultItem.className = 'result-item';
-    
-                    // Exibir o resultado como texto
-                    resultItem.textContent = result;
-    
-                    // Adicionar cada item de resultado ao contêiner de resultados
-                    resultsContainer.appendChild(resultItem);
+                    resultItem.textContent = result; // Exibir o resultado como texto
+                    resultsContainer.appendChild(resultItem); // Adicionar cada item de resultado ao contêiner de resultados
                 });
             }
         } else {
@@ -73,29 +67,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     createTimelineForm.addEventListener('submit', async (event) => {
         event.preventDefault(); // Impede o comportamento padrão de envio do formulário
+
         const formData = new FormData(createTimelineForm);
         const nome = formData.get('nome'); // 'nome' deve corresponder ao campo esperado pelo backend
 
-        try {
-            const response = await fetch('/timeline', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ nome })
-            });
+        const response = await fetch('/timeline', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ nome }) // Certifique-se de enviar o nome da timeline corretamente
+        });
 
-            if (response.ok) {
-                alert('Timeline criada com sucesso!');
-                popupForm.style.display = 'none';
-                createTimelineForm.reset();
-            } else {
-                const errorData = await response.json();
-                alert(`Erro ao criar timeline: ${errorData.error}`);
-            }
-        } catch (error) {
-            console.error('Erro ao criar timeline:', error);
-            alert('Erro ao criar timeline. Por favor, tente novamente.');
+        if (response.ok) {
+            alert('Timeline criada com sucesso!');
+            popupForm.style.display = 'none';
+            createTimelineForm.reset();
+        } else {
+            const errorData = await response.json();
+            alert(`Erro ao criar timeline: ${errorData.error}`);
         }
     });
 });
