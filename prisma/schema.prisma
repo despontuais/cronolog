@@ -49,8 +49,8 @@ model Segue {
 
 model Usuario {
   ID_Usuario    Int      @id @default(autoincrement())
-  Nome_Usuario  String   @unique @db.VarChar(255)
-  Email         String   @unique @db.VarChar(255)
+  Nome_Usuario  String   @db.VarChar(255) @unique
+  Email         String   @db.VarChar(255) @unique
   Senha         String   @db.VarChar(255)
   DT_nascimento DateTime @db.Date
 }

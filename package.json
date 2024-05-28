@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build:frontend": "tsc -p tsconfig.frontend.json",
+    "build:backend": "tsc -p tsconfig.backend.json",
     "test": "set NODE_ENV=test& jest --runInBand",
     "dev": "nodemon",
-    "build": "tsc",
+    "build": "npm run build:frontend && npm run build:backend",
     "start": "node build/server.js",
     "next-dev": "next dev",
     "next-build": "next build",
@@ -56,6 +58,8 @@
     "supertest": "^7.0.0",
     "ts-jest": "^29.1.2",
     "tsx": "^4.7.3",
+    "typescript": "^4.0.0",
+    "nodemon": "^2.0.0",
     "typescript-eslint": "^7.7.1"
   }
 }
