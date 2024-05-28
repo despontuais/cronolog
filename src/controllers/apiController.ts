@@ -9,6 +9,7 @@ dotenv.config();
 
 export const ping = (req: Request, res: Response) => {
     res.json({pong: true});
+    console.log(req.user);
 }
 
 export const register = async (req: Request, res: Response) => {
@@ -60,3 +61,4 @@ export const listUsers = async (req: Request, res: Response) => {
     const users = await UserService.findAll();
     return res.status(200).json({users});
 }
+

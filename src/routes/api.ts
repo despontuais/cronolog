@@ -4,10 +4,10 @@ import * as ApiController from '../controllers/apiController';
 
 const router = Router();
 
-router.get('/ping', ApiController.ping);
+router.get('/ping', privateRoute, ApiController.ping);
 router.get('/users/:id', ApiController.getUser);
 
-router.get('/users', privateRoute, ApiController.listUsers);
+router.get('/users', ApiController.listUsers);
 
 router.post('/register', ApiController.register);
 

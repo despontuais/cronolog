@@ -5,6 +5,7 @@ import cors from 'cors';
 import passport from 'passport';
 import siteRoutes from './routes/site';
 import apiRoutes from './routes/api';
+import tmdbRoutes from './routes/tmdb';
 import https from 'https';
 import http from 'http';
 import fs from 'fs';
@@ -21,7 +22,7 @@ app.use(express.urlencoded({extended: true}));
 
 app.use('/', siteRoutes);
 app.use('/api', apiRoutes);
-
+app.use('/tmdb', tmdbRoutes);
 
 
 const runServer = (port: number, server: http.Server) => {
