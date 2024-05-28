@@ -9,7 +9,7 @@ datasource db {
 
 
 model Comentario {
-  ID_Comentario Int       @id
+  ID_Comentario Int       @id @unique @default(autoincrement())
   ID_Usuario    Int
   ID_Midia      Int
   Texto         String   @db.VarChar(255)
@@ -20,34 +20,35 @@ model Comentario {
 }
 
 model Linha_do_tempo {
-  ID_LinhaTempo Int       @id
+  ID_LinhaTempo Int      @id @unique @default(autoincrement())
   ID_Usuario    Int
   ID_Midia      Int
-  Notas         String   @db.VarChar(255)
-  Classificacao String   @db.VarChar(255)
-  DT_Comentario DateTime @db.Date
+  Descricao     String   @db.Text
+  Classificacao String?   @db.VarChar(255)
+  DT_Comentario DateTime? @db.Date
 
   @@index([ID_Midia], map: "FK_ID_Midia")
   @@index([ID_Usuario], map: "FK_ID_Usuario")
 }
 
 model Midia {
-  ID_Midia      Int       @id
+  ID_Midia      Int      @id @unique @default(autoincrement())
   Titulo        String   @db.VarChar(255)
   Tipo          String   @db.VarChar(255)
   DT_Lancamento DateTime @db.Date
+  ID_API        Int      
 }
 
 model Segue {
-  ID_Segue    Int  @id
-  ID_Seguidor Int?
-  ID_Seguido  Int?
+  ID_Segue    Int  @id @unique @default(autoincrement())
+  ID_Seguidor Int
+  ID_Seguido  Int
 
   @@index([ID_Seguidor, ID_Seguido], map: "FK_ID_Usuario")
 }
 
 model Usuario {
-  ID_Usuario    Int       @id @default(autoincrement())
+  ID_Usuario    Int      @id @default(autoincrement())
   Nome_Usuario  String   @db.VarChar(255) @unique
   Email         String   @db.VarChar(255) @unique
   Senha         String   @db.VarChar(255)
