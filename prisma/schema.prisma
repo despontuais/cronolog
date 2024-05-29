@@ -38,8 +38,9 @@ model Midia {
 }
 
 model Segue {
-  ID_Segue    Int  @id
-  ID_Segue    Int  @id @unique @default(autoincrement())
+  ID_Segue    Int @id @unique @default(autoincrement())
+  ID_Seguidor Int
+  ID_Seguido  Int
 
   @@index([ID_Seguidor, ID_Seguido], map: "FK_ID_Usuario")
 }
