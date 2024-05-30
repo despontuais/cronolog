@@ -10,7 +10,7 @@ import http from 'http';
 import fs from 'fs';
 import logger from './libs/logger';
 import * as apiController from './controllers/apiController'; 
-import searchRoutes from './routes/searchRoutes';
+// import searchRoutes from './routes/searchRoutes';
 
 
 
@@ -21,14 +21,13 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '../public')));
-app.use(express.static(path.join(__dirname, '../public/login.html')));
+// app.use(express.static(path.join(__dirname, '../public')));
+// app.use(express.static(path.join(__dirname, '../public/login.html')));
 app.use(express.urlencoded({extended: true}));
-app.use('/', searchRoutes);
+// app.use('/', searchRoutes);
 
 app.use('/', siteRoutes);
 app.use('/api', apiRoutes);
-
 app.post('/register', apiController.register);
 
 
