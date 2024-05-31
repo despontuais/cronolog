@@ -1,44 +1,50 @@
 # Cronolog
-Projeto em construção para o Curso de Tecnologia Em Análise e Desenvolvimento de Sistemas 
 
-### Pré-requisitos globais:
-`npm i -g nodemon typescript ts-node`
+## Instalação
 
+### Pré-requisitos
 
-### Instalação
-`npm install`
+- Node.js 20+
+- MySQL
 
-### Para rodar o projeto
-`npm run start-dev`
+### Configuração do banco de dados
 
-## Para rodar o projeto – Prisma ORM
+Consulte o arquivo .env.example para a lista de variáveis de ambiente e formatação
 
-### Gerando Client e Aplicando Migrations
+Prisma estabelece a conexão com o banco de dados através da variável `DATABASE_URL`. Certifique-se de que o endereço do banco de dados esteja correto antes de prosseguir
 
-`npx prisma generate`
+Exemplo: `DATABASE_URL=mysql://test:password@localhost:3306/db?schema=public`
 
-`npx prisma migrate dev`
+### Compilar do código fonte
 
-### Conexão com o MySQL – Prisma ORM
-Para conectar o Prisma ao MySQL, basta criar um `.env` contendo a linha a seguir:  
-\
-`DATABASE_URL=mysql://test:password@localhost:3306/db?schema=public`
+Clone o repositório
 
-é necessário substituir:
+```console
+git clone https://github.com/despontuais/cronolog.git
+```
 
-`test` pelo nome de usuário  
-\
-`password` pela senha;  
-\
-`localhost` pelo endereço que está sendo utilizado;  
-\
-`3306` pela porta que estiver sendo utilizada;  
-\
-`db` pelo nome do BD que estiver sendo utilizado  
+Instale as dependências
 
-### Execução de testes
+```console
+cd cronolog \
+npm install
+```
 
-É recomendado que seja utilizado um banco de dados de teste, sendo assim o `.env` seria:  
-`DATABASE_URL=mysql://test:password@localhost:3306/test_db?schema=public`  
+Migre as tabelas para o banco de dados (MySQL deve estar devidamente configurado)
 
-`npm test`
+```console
+npx prisma generate \
+npx prisma migrate dev
+```
+
+Execute o projeto localmente
+
+```console
+npm run dev
+```
+
+Ou compile
+
+```console
+npm run build
+```
