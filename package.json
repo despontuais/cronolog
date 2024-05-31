@@ -4,11 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build:frontend": "tsc -p tsconfig.frontend.json",
-    "build:backend": "tsc -p tsconfig.backend.json",
     "test": "set NODE_ENV=test& jest --runInBand",
     "dev": "nodemon",
-    "build": "npm run build:frontend && npm run build:backend",
+    "build": "tsc",
     "start": "node build/server.js",
     "next-dev": "next dev",
     "next-build": "next build",
