@@ -2,7 +2,7 @@ import passport from "passport";
 import dotenv from "dotenv";
 import { ExtractJwt, Strategy as JWTStrategy } from "passport-jwt";
 import { findById } from "../services/UserService";
-import {Request, Response, NextFunction} from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { Usuario } from "@prisma/client";
 import jwt from 'jsonwebtoken';
 
