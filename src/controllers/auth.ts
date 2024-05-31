@@ -1,14 +1,7 @@
 import { Request, Response } from 'express';
-import dotenv from 'dotenv';
-import * as UserService from '../services/UserService';
-import logger from '../libs/logger';
 import { generateToken } from '../config/passport';
-
-dotenv.config();
-
-export const ping = (req: Request, res: Response) => {
-    res.json({ pong: true });
-}
+import * as UserService from "../services/UserService"
+import logger from "../libs/logger";
 
 export const register = async (req: Request, res: Response) => {
     if (!req.body.email || !req.body.password) {
@@ -50,28 +43,6 @@ export const login = async (req: Request, res: Response) => {
     }
 }
 
-export const getUser = async (req: Request, res: Response) => {
-    let id = parseInt(req.params.id);
-    const user = await UserService.findById(id);
-    return res.status(200).json({ test: user });
-}
-
-export const listUsers = async (req: Request, res: Response) => {
-    const users = await UserService.findAll();
-    return res.status(200).json({ users });
-}
-
-export const search = async (req: Request, res: Response) => {
-    // Lógica para lidar com a pesquisa aqui
-    const query = req.query.q; // Supondo que a pesquisa seja baseada em um parâmetro de consulta chamado 'q'
-    
-    try {
-        // Faça sua lógica de pesquisa aqui com base na query
-        
-        // Exemplo simples: apenas retornar a consulta de volta
-        res.status(200).json({ query });
-    } catch (error) {
-        // Em caso de erro, retorne uma resposta de erro
-        res.status(500).json({ error: 'Erro ao processar a pesquisa.' });
-    }
+export const me = async (req: Request, res: Response) => {
+	res.json(req.user)
 }
