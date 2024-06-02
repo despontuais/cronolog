@@ -15,7 +15,7 @@ model User {
   birthDate DateTime   @db.Date
   // role       String     @db.VarChar(255)
   // created_at DateTime   @db.Timestamp(0)
-  timeline  timeline[]
+  timeline  Timeline[]
 
   @@map("users")
 }
@@ -24,7 +24,7 @@ model Media {
   id             Int              @id @default(autoincrement())
   timeline_id    Int?
   title          String?          @db.VarChar(255)
-  media_timeline media_timeline[]
+  media_timeline Media_Timeline[]
 
   @@index([timeline_id], map: "idx_timeline_id")
 }
@@ -32,8 +32,8 @@ model Media {
 model Media_Timeline {
   media_timeline_id Int
   timeline_id       Int
-  timeline          timeline @relation(fields: [timeline_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "media_timeline_ibfk_1")
-  media             media    @relation(fields: [media_timeline_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "media_timeline_ibfk_5")
+  timeline          Timeline @relation(fields: [timeline_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "media_timeline_ibfk_1")
+  media             Media    @relation(fields: [media_timeline_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "media_timeline_ibfk_5")
 
   @@id([media_timeline_id, timeline_id])
   @@index([timeline_id], map: "timeline_id")
@@ -45,7 +45,7 @@ model Timeline {
   title          String?          @db.VarChar(255)
   description    String?          @db.Text
   created_at     DateTime?        @db.Timestamp(0)
-  media_timeline media_timeline[]
+  media_timeline Media_Timeline[]
   users          User?            @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "timeline_ibfk_1")
 
   @@index([user_id], map: "user_id")
