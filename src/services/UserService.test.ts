@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient, Usuario } from '@prisma/client';
+import { User } from '@prisma/client';
 import { prisma } from '../libs/prisma';
 import * as UserService from './UserService';
 
@@ -6,7 +6,7 @@ describe('Testing user service', () => {
 
 
     beforeAll(async () => {
-        await prisma.usuario.deleteMany({});
+        await prisma.user.deleteMany({});
     })
 
     let name = 'test';
@@ -17,18 +17,16 @@ describe('Testing user service', () => {
     let email2 = 'anothertest@test.com';
     let password2 = '4050';
     let name2 = '';
-    let birthDate2 = '05/28/2010';
-
 
     it('should create a new user (with a name)', async () => {
-        const newUser = await UserService.createUser(email, password, name, birthDate) as Usuario;
+        const newUser = await UserService.createUser(email, password, name, birthDate) as User;
         expect(newUser).not.toBeInstanceOf(Error);
-        expect(newUser.Email).toBe(email);
-        expect(newUser.Nome_Usuario).toBe(name);
+        expect(newUser.email).toBe(email);
+        expect(newUser.username).toBe(name);
     });
 
     it('should not create a new user without a name', async () => {
-        const newUser = await UserService.createUser(email2, password2, name2, birthDate) as Usuario;
+        const newUser = await UserService.createUser(email2, password2, name2, birthDate) as User;
         expect(newUser).toBeInstanceOf(Error);
     });
 
@@ -38,19 +36,19 @@ describe('Testing user service', () => {
     });
 
     it('should find a user by the email', async () => {
-        const user = await UserService.findByEmail(email) as Usuario;
-        expect(user.Email).toBe(email);
+        const user = await UserService.findByEmail(email) as User;
+        expect(user.email).toBe(email);
     });
 
     it('should match the password from database', async () => {
-        const user = await UserService.findByEmail(email) as Usuario
-        const match = await UserService.matchPassword(password, user.Senha);
+        const user = await UserService.findByEmail(email) as User 
+        const match = await UserService.matchPassword(password, user.password);
         expect(match).toBeTruthy();
     })
 
     it('should not match the password from database', async () =>{
-        const user = await UserService.findByEmail(email) as Usuario;
-        const match = await UserService.matchPassword('anything', user.Senha);
+        const user = await UserService.findByEmail(email) as User;
+        const match = await UserService.matchPassword('anything', user.password);
         expect(match).toBeFalsy();
     });
 });

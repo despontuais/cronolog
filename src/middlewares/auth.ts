@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import { prisma } from "../libs/prisma";
-import { Usuario } from '@prisma/client';
 import { JWT_SECRET } from "../secrets"
 import * as jwt from 'jsonwebtoken'
 
@@ -12,11 +11,11 @@ const authMiddleware = async(req: Request, res: Response, next: NextFunction) =>
 	}
 	try {
 		const payload = jwt.verify(token, JWT_SECRET) as any
-		const user = await prisma.usuario.findFirst({where: {ID_Usuario: payload.userID}})
+		const user = await prisma.user.findFirst({where: {id: payload.userID}})
 		if(!user) {
 			res.status(401).json({error: "Not Authorized"})
 		}
-		req.user = user as Usuario
+		req.user = user as any
 		next()
 	}
 	catch(error) {
