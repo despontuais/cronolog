@@ -7,48 +7,46 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Comentario {
-  ID_Comentario Int      @id @unique @default(autoincrement())
-  ID_Usuario    Int
-  ID_Midia      Int
-  Texto         String   @db.VarChar(255)
-  DT_Comentario DateTime @db.Date
+model User {
+  id        Int        @id @unique @default(autoincrement())
+  username  String     @unique @db.VarChar(255)
+  email     String     @unique @db.VarChar(255)
+  password  String
+  birthDate DateTime   @db.Date
+  // role       String     @db.VarChar(255)
+  // created_at DateTime   @db.Timestamp(0)
+  timeline  timeline[]
 
-  @@index([ID_Midia], map: "FK_ID_Midia")
-  @@index([ID_Usuario], map: "FK_ID_Usuario")
+  @@map("users")
 }
 
-model Linha_do_tempo {
-  ID_LinhaTempo Int      @id @unique @default(autoincrement())
-  ID_Usuario    Int
-  ID_Midia      Int
-  Notas         String   @db.VarChar(255)
-  Classificacao String   @db.VarChar(255)
-  DT_Comentario DateTime @db.Date
+model Media {
+  id             Int              @id @default(autoincrement())
+  timeline_id    Int?
+  title          String?          @db.VarChar(255)
+  media_timeline media_timeline[]
 
-  @@index([ID_Midia], map: "FK_ID_Midia")
-  @@index([ID_Usuario], map: "FK_ID_Usuario")
+  @@index([timeline_id], map: "idx_timeline_id")
 }
 
-model Midia {
-  ID_Midia      Int      @id @unique @default(autoincrement())
-  Titulo        String   @db.VarChar(255)
-  Tipo          String   @db.VarChar(255)
-  DT_Lancamento DateTime @db.Date
+model Media_Timeline {
+  media_timeline_id Int
+  timeline_id       Int
+  timeline          timeline @relation(fields: [timeline_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "media_timeline_ibfk_1")
+  media             media    @relation(fields: [media_timeline_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "media_timeline_ibfk_5")
+
+  @@id([media_timeline_id, timeline_id])
+  @@index([timeline_id], map: "timeline_id")
 }
 
-model Segue {
-  ID_Segue    Int @id @unique @default(autoincrement())
-  ID_Seguidor Int
-  ID_Seguido  Int
+model Timeline {
+  id             Int              @id @default(autoincrement())
+  user_id        Int?
+  title          String?          @db.VarChar(255)
+  description    String?          @db.Text
+  created_at     DateTime?        @db.Timestamp(0)
+  media_timeline media_timeline[]
+  users          User?            @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "timeline_ibfk_1")
 
-  @@index([ID_Seguidor, ID_Seguido], map: "FK_ID_Usuario")
-}
-
-model Usuario {
-  ID_Usuario    Int      @id @default(autoincrement())
-  Nome_Usuario  String   @db.VarChar(255) @unique
-  Email         String   @db.VarChar(255) @unique
-  Senha         String   @db.VarChar(255)
-  DT_nascimento DateTime @db.Date
+  @@index([user_id], map: "user_id")
 }
