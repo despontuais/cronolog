@@ -1,20 +1,17 @@
 import passport from "passport";
-import dotenv from "dotenv";
+import { JWT_SECRET } from "../secrets"
 import { ExtractJwt, Strategy as JWTStrategy } from "passport-jwt";
 import { findById } from "../services/UserService";
-import {Request, Response, NextFunction} from 'express';
-import { Usuario } from "@prisma/client";
+import { Request, Response, NextFunction } from 'express';
+import { User } from "@prisma/client";
 import jwt from 'jsonwebtoken';
-
-
-dotenv.config();
-
 
 const notAuthorizedJson = {status: 401, message: 'Not Authorized'};
 
 const options = {
-    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: process.env.JWT_SECRET as string
+    // substituí o bearer por um header "Authorization" na request
+    jwtFromRequest: ExtractJwt.fromHeader("Authorization"),
+    secretOrKey: JWT_SECRET
 }
 
 passport.use(new JWTStrategy(options, async (payload, done) =>{
@@ -26,11 +23,11 @@ passport.use(new JWTStrategy(options, async (payload, done) =>{
 }));
 
 export const generateToken = (data: object) => {
-    return jwt.sign(data, process.env.JWT_SECRET as string);
+    return jwt.sign(data, JWT_SECRET, {expiresIn: 90});
 }
 
 export const privateRoute = (req: Request, res: Response, next: NextFunction) =>{
-    const authFunction = passport.authenticate('jwt', (err: any, user: Usuario) => {
+    const authFunction = passport.authenticate('jwt', (err: any, user: User) => {
        req.user = user;
        return user ? next() : next(notAuthorizedJson);
     });

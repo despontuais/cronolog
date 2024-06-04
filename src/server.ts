@@ -1,16 +1,13 @@
 import express, { Request, Response, ErrorRequestHandler } from 'express';
-import path from 'path';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import passport from 'passport';
-import siteRoutes from './routes/site';
-import apiRoutes from './routes/api';
+import authRoutes from './routes/auth';
+import userRoutes from './routes/users';
 import https from 'https';
 import http from 'http';
 import fs from 'fs';
 import logger from './libs/logger';
-import * as apiController from './controllers/apiController'; 
-// import searchRoutes from './routes/searchRoutes';
 
 
 
@@ -21,15 +18,10 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-// app.use(express.static(path.join(__dirname, '../public')));
-// app.use(express.static(path.join(__dirname, '../public/login.html')));
 app.use(express.urlencoded({extended: true}));
-// app.use('/', searchRoutes);
 
-app.use('/', siteRoutes);
-app.use('/api', apiRoutes);
-app.post('/register', apiController.register);
-
+app.use('/api', userRoutes);
+app.use('/api/auth', authRoutes);
 
 
 
