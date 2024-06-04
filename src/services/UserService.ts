@@ -2,7 +2,8 @@ import { Prisma, User } from "@prisma/client";
 import { prisma } from "../libs/prisma";
 import bcrypt from 'bcrypt';
 import validator from 'validator';
-import moment from "moment";
+import moment, { now } from "moment";
+import logger from "../libs/logger";
 
 export const createUser = async (email: string, password: string, name: string, birthDateString: string) =>{
     
@@ -28,13 +29,17 @@ export const createUser = async (email: string, password: string, name: string, 
     if(!birthDateString){
         return new Error('Data de nascimento não pode ser nula.');
     }
-    let dateMomentObject = moment(birthDateString, "DD/MM/YYYY");
+    let dateMomentObject = moment(birthDateString, ["YYYY-MM-DD", "DD-MM-YYYY", "DD/MM/YYYY", "YYYY/MM/DD"]);
    if(!dateMomentObject.isValid()){
         return new Error('Data de nascimento inválida');
     }
     let birthDate = dateMomentObject.toDate();
+    let age = moment(now()).diff(birthDate, 'years');
+    if(age < 18){
+        return new Error("Você deve ter ao menos de 18 anos de idade para se cadastrar!");
+    }
 
-
+    
     const hash = bcrypt.hashSync(password, 10);
     const user: Prisma.UserCreateInput = {
         email: email,
