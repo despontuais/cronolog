@@ -6,7 +6,7 @@ export const ping = async (req: Request, res: Response) => {
 }
 
 export const getUser = async (req: Request, res: Response) => {
-    let id = parseInt(req.params.id);
+    const id = parseInt(req.params.id);
     const user = await UserService.findById(id);
     return res.status(200).json({ test: user });
 }

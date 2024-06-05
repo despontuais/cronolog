@@ -9,14 +9,14 @@ describe('Testing user service', () => {
         await prisma.user.deleteMany({});
     })
 
-    let name = 'test';
-    let email = 'test@test.com';
-    let password = '2030';
-    let birthDate = '05/02/2010';
+    const name = 'test';
+    const email = 'test@test.com';
+    const password = '2030';
+    const birthDate = '05/02/2010';
     
-    let email2 = 'anothertest@test.com';
-    let password2 = '4050';
-    let name2 = '';
+    const email2 = 'anothertest@test.com';
+    const password2 = '4050';
+    const name2 = '';
 
     it('should create a new user (with a name)', async () => {
         const newUser = await UserService.createUser(email, password, name, birthDate) as User;
@@ -36,18 +36,18 @@ describe('Testing user service', () => {
     });
 
     it('should find a user by the email', async () => {
-        const user = await UserService.findByEmail(email) as User;
+        const user = (await UserService.findByEmail(email))!;
         expect(user.email).toBe(email);
     });
 
     it('should match the password from database', async () => {
-        const user = await UserService.findByEmail(email) as User 
+        const user = (await UserService.findByEmail(email))! 
         const match = await UserService.matchPassword(password, user.password);
         expect(match).toBeTruthy();
     })
 
     it('should not match the password from database', async () =>{
-        const user = await UserService.findByEmail(email) as User;
+        const user = (await UserService.findByEmail(email))!;
         const match = await UserService.matchPassword('anything', user.password);
         expect(match).toBeFalsy();
     });

@@ -8,7 +8,7 @@ export const register = async (req: Request, res: Response) => {
         return res.json({ error: 'E-mail e/ou senha não enviados.' });
     }
     try{
-        let {email, password, name, birthDate} = req.body;
+        const {email, password, name, birthDate} = req.body;
         const newUser = await UserService.createUser(email, password, name, birthDate);
         if(newUser instanceof Error){
             res.status(400).json({error: newUser.message});
@@ -29,8 +29,8 @@ export const login = async (req: Request, res: Response) => {
         return res.status(401).json({status: false});
     }
     try {
-        let email: string = req.body.email;
-        let password: string = req.body.password;
+        const email: string = req.body.email;
+        const password: string = req.body.password;
         const user = await UserService.findByEmail(email);
         if(user && await UserService.matchPassword(password, user.password)){
             const token = generateToken({id: user.id});
