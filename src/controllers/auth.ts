@@ -34,7 +34,9 @@ export const login = async (req: Request, res: Response) => {
         const user = await UserService.findByEmail(email);
         if(user && await UserService.matchPassword(password, user.password)){
             const token = generateToken({id: user.id});
-            return res.status(200).json({status: true, token});
+            return res.status(200).json(
+                {user: {id: user.id, username: user.username, email: user.email},
+                status: true, token});
         }
         return res.json({ status: false, error: 'E-mail e/ou senha inválidos.' });
     } catch (error) {

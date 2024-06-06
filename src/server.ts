@@ -10,8 +10,6 @@ import fs from 'fs';
 import logger from './libs/logger';
 
 
-
-
 dotenv.config();
 
 const app = express();
@@ -22,8 +20,6 @@ app.use(express.urlencoded({extended: true}));
 
 app.use('/api', userRoutes);
 app.use('/api/auth', authRoutes);
-
-
 
 
 const runServer = (port: number, server: http.Server) => {
