@@ -1,10 +1,10 @@
-import { NextFunction, Request, Response } from 'express';
+/*import { NextFunction, Request, Response } from "express";
 import { prisma } from "../libs/prisma";
-import { JWT_SECRET } from "../secrets"
-import * as jwt from 'jsonwebtoken'
+import { JWT_SECRET } from "../secrets";
+import * as jwt from "jsonwebtoken";
 
 const authMiddleware = async(req: Request, res: Response, next: NextFunction) => {
-	const token = req.headers.authorization as string
+	const token = req.headers.authorization!
 	if(!token) {
 		// implementar melhor a resposta com uma exception (vale para todos)
 		res.status(401).json({error: "Not Authorized"})
@@ -24,3 +24,4 @@ const authMiddleware = async(req: Request, res: Response, next: NextFunction) =>
 }
 
 export default authMiddleware
+*/
