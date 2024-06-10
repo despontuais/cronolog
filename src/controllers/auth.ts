@@ -28,7 +28,7 @@ export const register = async (req: Request, res: Response) => {
 };
 
 export const login = async (req: Request, res: Response) => {
-const userParams: UserLoginInput = req.body as UserLoginInput;
+  const userParams: UserLoginInput = req.body as UserLoginInput;
   try {
     const user = await UserService.loginUser(userParams);
     const parsedResult = JSON.parse(user);
@@ -36,9 +36,10 @@ const userParams: UserLoginInput = req.body as UserLoginInput;
   } catch (error) {
     if (error instanceof Error) {
       logger.error(error.message);
-    }
       return res.json({ status: false, error: error.message });
-}};
+    }
+  }
+};
 
 export const me = (req: Request, res: Response) => {
   return res.json(req.user);

@@ -6,7 +6,5 @@ const userRoutes: Router = Router();
 userRoutes.get("/ping", ping as RequestHandler);
 userRoutes.get("/users/:id", getUser as RequestHandler);
 userRoutes.get("/users", privateRoute, listUsers as RequestHandler);
-const userRoutes:Router = Router();
-
 
 export default userRoutes;
