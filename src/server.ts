@@ -24,6 +24,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/api", userRoutes);
 app.use("/api/auth", authRoutes);
 
+
 const runServer = (port: number, server: http.Server) => {
   server.listen(port, () => {
     logger.info(`Servidor rodando na porta ${port.toString()}`);

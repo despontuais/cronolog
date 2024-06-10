@@ -2,7 +2,6 @@ import { Router } from "express";
 import { login, register, me } from "../controllers/auth";
 import { privateRoute } from "../config/passport";
 import { RequestHandler } from "express";
-
 const authRoutes: Router = Router();
 
 authRoutes.post("/register", register as RequestHandler);
