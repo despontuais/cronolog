@@ -36,9 +36,9 @@ const userParams: UserLoginInput = req.body as UserLoginInput;
   } catch (error) {
     if (error instanceof Error) {
       logger.error(error.message);
+    }
       return res.json({ status: false, error: error.message });
-
-};
+}};
 
 export const me = (req: Request, res: Response) => {
   return res.json(req.user);
