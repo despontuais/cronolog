@@ -1,54 +1,63 @@
-import { User } from '@prisma/client';
-import { prisma } from '../libs/prisma';
-import * as UserService from './UserService';
+import { prisma } from "../libs/prisma";
+import * as UserService from "./UserService";
 
-describe('Testing user service', () => {
+describe("Testing user service", () => {
+  beforeAll(async () => {
+    await prisma.user.deleteMany({});
+  });
 
+  const userTest = {
+    username: "test",
+    email: "test@test.com",
+    password: "2030",
+    birthDate: "05/02/2000",
+  };
 
-    beforeAll(async () => {
-        await prisma.user.deleteMany({});
-    })
+  const userTest2 = {
+    username: "",
+    email: "anothertest@test.com",
+    password: "4050",
+    birthDate: "10/08/2002",
+  };
 
-    let name = 'test';
-    let email = 'test@test.com';
-    let password = '2030';
-    let birthDate = '05/02/2010';
-    
-    let email2 = 'anothertest@test.com';
-    let password2 = '4050';
-    let name2 = '';
+  it("should create a new user (with a name)", async () => {
+    const newUser = await UserService.createUser(userTest);
+    expect(newUser).not.toBeInstanceOf(Error);
+    expect(newUser.email).toBe(userTest.email);
+    expect(newUser.username).toBe(userTest.email);
+  });
 
-    it('should create a new user (with a name)', async () => {
-        const newUser = await UserService.createUser(email, password, name, birthDate) as User;
-        expect(newUser).not.toBeInstanceOf(Error);
-        expect(newUser.email).toBe(email);
-        expect(newUser.username).toBe(name);
-    });
+  it("should not create a new user without a name", async () => {
+    const newUser = await UserService.createUser(userTest2);
+    expect(newUser).toBeInstanceOf(Error);
+  });
 
-    it('should not create a new user without a name', async () => {
-        const newUser = await UserService.createUser(email2, password2, name2, birthDate) as User;
-        expect(newUser).toBeInstanceOf(Error);
-    });
+  it("should not allow to create a user with existing email", async () => {
+    const newUser = await UserService.createUser(userTest);
+    expect(newUser).toBeInstanceOf(Error);
+  });
 
-    it('should not allow to create a user with existing email', async () => {
-        const newUser = await UserService.createUser(email, password, name, birthDate);
-        expect(newUser).toBeInstanceOf(Error);
-    });
+  it("should find a user by the email", async () => {
+    const user = await UserService.findByEmail(userTest.email);
+    user && expect(user.email).toBe(userTest.email);
+  });
 
-    it('should find a user by the email', async () => {
-        const user = await UserService.findByEmail(email) as User;
-        expect(user.email).toBe(email);
-    });
+  it("should match the password from database", async () => {
+    const user = await UserService.findByEmail(userTest.email);
+    user && UserService.matchPassword(userTest.password, user.password);
+    let match = false;
+    if (user) {
+      match = UserService.matchPassword(userTest.password, user.password);
+    }
+    expect(match).toBeTruthy();
+  });
 
-    it('should match the password from database', async () => {
-        const user = await UserService.findByEmail(email) as User 
-        const match = await UserService.matchPassword(password, user.password);
-        expect(match).toBeTruthy();
-    })
-
-    it('should not match the password from database', async () =>{
-        const user = await UserService.findByEmail(email) as User;
-        const match = await UserService.matchPassword('anything', user.password);
-        expect(match).toBeFalsy();
-    });
+  it("should not match the password from database", async () => {
+    const user = await UserService.findByEmail(userTest.email);
+    let match = true;
+    if (user) {
+      match = UserService.matchPassword("anything", user.password);
+    }
+    expect(match).toBeFalsy();
+  });
 });

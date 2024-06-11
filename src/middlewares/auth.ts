@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+/*import { NextFunction, Request, Response } from 'express';
 import { prisma } from "../libs/prisma";
 import { JWT_SECRET } from "../secrets";
 import * as jwt from 'jsonwebtoken';
@@ -30,3 +30,4 @@ const authMiddleware = async (req: AuthenticatedRequest, res: Response, next: Ne
 };
 
 export default authMiddleware;
+*/
