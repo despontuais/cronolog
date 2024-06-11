@@ -1,12 +1,13 @@
 import { Router } from 'express';
-import { login, register, me } from '../controllers/auth';
+import { login, register, me, search, logout } from '../controllers/auth';
 import authMiddleware from '../middlewares/auth';
-import { privateRoute } from '../config/passport';
+
 
 const authRoutes:Router = Router();
 
 authRoutes.post('/register', register);
 authRoutes.post('/login', login);
-authRoutes.get('/me', privateRoute, me)
+authRoutes.get('/me', authMiddleware, me);
+
 
 export default authRoutes;
