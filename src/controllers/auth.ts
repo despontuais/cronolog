@@ -1,14 +1,14 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import * as UserService from "../services/UserService";
 import logger from "../libs/logger";
 import { Prisma } from "@prisma/client";
+import { NODE_ENV } from "../secrets";
 
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 //this type is being declared in "auth.ts" and "UserService.ts"
 interface UserLoginInput {
-  email?: string;
-  username?: string;
+  login: string;
   password: string;
 }
 
