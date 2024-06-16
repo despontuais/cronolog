@@ -93,10 +93,7 @@ export const findByName = async (username: string) => {
 };
 
 export const findById = async (id: number) => {
-  return await prisma.user.findUnique({
-    where: { id },
-    select: { id: true, email: true },
-  });
+  return await prisma.user.findUnique({ where: { id }});
 };
 
 export const findAll = async () => {
