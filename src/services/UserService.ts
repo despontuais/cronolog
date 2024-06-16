@@ -7,8 +7,7 @@ import { generateToken } from "../config/passport";
 
 //this type is being declared in "auth.ts" and "UserService.ts"
 interface UserLoginInput {
-  email?: string;
-  username?: string;
+  login: string;
   password: string;
 }
 
