@@ -25,6 +25,7 @@ model Media {
   title          String          @db.VarChar(255)
   media_timeline Media_Timeline[]
   apiID          Int?
+  chronological_date     DateTime?        @db.Timestamp(0)
 }
 
 model Media_Timeline {
