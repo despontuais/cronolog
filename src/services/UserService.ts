@@ -61,12 +61,11 @@ export const createUser = async (userBody: Prisma.UserCreateInput) => {
   return newUser;
 };
 export const loginUser = async (userParams: UserLoginInput) => {
-  const user = userParams.email
-    ? await findByEmail(userParams.email)
-    : userParams.username
-      ? await findByName(userParams.username)
+  const user = validator.isEmail(userParams.login)
+    ? await findByEmail(userParams.login)
+    : userParams.login
+      ? await findByName(userParams.login)
       : null;
-
   //refactor later
   if (typeof userParams.password === "undefined") {
     userParams.password = "";
