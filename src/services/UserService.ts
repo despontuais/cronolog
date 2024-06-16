@@ -39,7 +39,12 @@ export const createUser = async (userBody: Prisma.UserCreateInput) => {
   if (!userBody.birthDate) {
     throw new Error("Data de nascimento não pode ser nula.");
   }
-  const dateMomentObject = moment(userBody.birthDate, "DD/MM/YYYY");
+  const dateMomentObject = moment(userBody.birthDate, [
+    "DD/MM/YYYY",
+    "DD-MM-YYYY",
+    "YYYY-MM-DD",
+    "MM-DD-YYYY",
+  ]);
   if (!dateMomentObject.isValid()) {
     throw new Error("Data de nascimento inválida");
   }
