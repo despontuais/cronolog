@@ -11,12 +11,21 @@ import logger from "../libs/logger";
 
 const notAuthorizedJson = { status: 401, message: "Not Authorized" };
 
+const cookieExtractor = function(req: Request) {
+    let token = null;
+    if (req && req.cookies) {
+        token = req.cookies['authToken'];
+    }
+    return token;
+};
+
 const options = {
-    // substituí o bearer por um header "Authorization" na request
-    jwtFromRequest: ExtractJwt.fromHeader('authorization'),
-    secretOrKey: JWT_SECRET,
-    ignoreExpiration: false
-}
+  // substituí o bearer por um header "Authorization" na request
+  jwtFromRequest: cookieExtractor,
+  secretOrKey: JWT_SECRET,
+  ignoreExpiration: false,
+};
+
 
 passport.use(
   new JWTStrategy(options, (payload: User, done) => {
@@ -48,15 +57,10 @@ export const privateRoute = (
   res: Response,
   next: NextFunction,
 ) => {
-  passport.authenticate(
-    "jwt",
-    { session: false },
-    (err: Error | null, user: User) => {
-      req.user = user;
-      err ? next(notAuthorizedJson) : next();
-    },
-  )(req, res, next);
+  passport.authenticate("jwt", (err: Error | null, user: User) => {
+    req.user = user;
+    user ? next() : next(notAuthorizedJson);
+  })(req, res, next);
 };
-
 
 export default passport;
