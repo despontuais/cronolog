@@ -7,8 +7,7 @@ import { generateToken } from "../config/passport";
 
 //this type is being declared in "auth.ts" and "UserService.ts"
 interface UserLoginInput {
-  email?: string;
-  username?: string;
+  login: string;
   password: string;
 }
 
@@ -40,7 +39,12 @@ export const createUser = async (userBody: Prisma.UserCreateInput) => {
   if (!userBody.birthDate) {
     throw new Error("Data de nascimento não pode ser nula.");
   }
-  const dateMomentObject = moment(userBody.birthDate, "DD/MM/YYYY");
+  const dateMomentObject = moment(userBody.birthDate, [
+    "DD/MM/YYYY",
+    "DD-MM-YYYY",
+    "YYYY-MM-DD",
+    "MM-DD-YYYY",
+  ]);
   if (!dateMomentObject.isValid()) {
     throw new Error("Data de nascimento inválida");
   }
@@ -57,12 +61,11 @@ export const createUser = async (userBody: Prisma.UserCreateInput) => {
   return newUser;
 };
 export const loginUser = async (userParams: UserLoginInput) => {
-  const user = userParams.email
-    ? await findByEmail(userParams.email)
-    : userParams.username
-      ? await findByName(userParams.username)
+  const user = validator.isEmail(userParams.login)
+    ? await findByEmail(userParams.login)
+    : userParams.login
+      ? await findByName(userParams.login)
       : null;
-
   //refactor later
   if (typeof userParams.password === "undefined") {
     userParams.password = "";
@@ -90,10 +93,7 @@ export const findByName = async (username: string) => {
 };
 
 export const findById = async (id: number) => {
-  return await prisma.user.findUnique({
-    where: { id },
-    select: { id: true, email: true },
-  });
+  return await prisma.user.findUnique({ where: { id }});
 };
 
 export const findAll = async () => {

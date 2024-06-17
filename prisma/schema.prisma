@@ -22,11 +22,10 @@ model User {
 
 model Media {
   id             Int              @id @default(autoincrement())
-  timeline_id    Int?
-  title          String?          @db.VarChar(255)
+  title          String          @db.VarChar(255)
   media_timeline Media_Timeline[]
-
-  @@index([timeline_id], map: "idx_timeline_id")
+  apiID          Int?
+  chronological_date     DateTime?        @db.Timestamp(0)
 }
 
 model Media_Timeline {
@@ -41,12 +40,12 @@ model Media_Timeline {
 
 model Timeline {
   id             Int              @id @default(autoincrement())
-  user_id        Int?
+  user_id        Int
   title          String?          @db.VarChar(255)
   description    String?          @db.Text
-  created_at     DateTime?        @db.Timestamp(0)
+  created_at     DateTime?        @db.Timestamp(0) @default(now())
   media_timeline Media_Timeline[]
-  users          User?            @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "timeline_ibfk_1")
+  users          User            @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "timeline_ibfk_1")
 
   @@index([user_id], map: "user_id")
 }

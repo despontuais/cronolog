@@ -1,15 +1,26 @@
-import express, { Request, Response, ErrorRequestHandler } from "express";
+import express, {
+  Request,
+  Response,
+  ErrorRequestHandler,
+  NextFunction,
+} from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import passport from "passport";
 import authRoutes from "./routes/auth";
 import userRoutes from "./routes/users";
+import timelineRoutes from "./routes/timeline";
+import mediaRoutes from "./routes/media";
+import tmdbRoutes from './routes/tmdb';
+
 import https from "https";
 import http from "http";
 import fs from "fs";
 import logger from "./libs/logger";
-import { SSL_KEY, SSL_CERT } from "./secrets";
+import { SSL_KEY, SSL_CERT, JWT_SECRET } from "./secrets";
 import bodyParser from "body-parser";
+import session from "express-session";
+import cookieParser from 'cookie-parser';
 
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
@@ -17,12 +28,31 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(
+  cors({
+    credentials: true,
+    origin: true,
+  }),
+);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(
+  session({
+    secret: "noitulove",
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: true },
+  }),
+);
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(cookieParser(JWT_SECRET))
 
 app.use("/api", userRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/timeline", timelineRoutes);
+app.use("/api/media", mediaRoutes);
+app.use('/tmdb', tmdbRoutes);
 
 
 const runServer = (port: number, server: http.Server) => {
@@ -47,12 +77,12 @@ if (process.env.NODE_ENV === "production") {
   runServer(serverPort, regularServer);
 }
 
-app.use(passport.initialize());
 
 const errorHandler: ErrorRequestHandler = (
   err: Error,
   req: Request,
   res: Response,
+  next: NextFunction,
 ) => {
   res.status(400);
   err.message
