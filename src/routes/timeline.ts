@@ -8,18 +8,11 @@ timelineRoutes.get("/:id", TimelineController.getTimeline);
 
 timelineRoutes.get("/", TimelineController.getAllTimelines);
 
+timelineRoutes.post("/createTimeline", privateRoute, TimelineController.createTimeline);
 
-timelineRoutes.post(
-  "/createTimeline", privateRoute,
-  TimelineController.createTimeline,
-);
-timelineRoutes.post(
-  "/createTimelineMedia", privateRoute, 
-  TimelineController.createTimelineMedia,
-);
+timelineRoutes.post("/createTimelineMedia", privateRoute, TimelineController.createTimelineMedia);
 
-
-timelineRoutes.delete("/timeline/:id", privateRoute);
+timelineRoutes.delete("/timeline/:id", privateRoute); 
 
 timelineRoutes.put("/timeline/:id");
 

@@ -52,7 +52,7 @@ app.use("/api", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/timeline", timelineRoutes);
 app.use("/api/media", mediaRoutes);
-app.use('/tmdb', tmdbRoutes);
+app.use('/api/tmdb', tmdbRoutes);
 
 
 const runServer = (port: number, server: http.Server) => {

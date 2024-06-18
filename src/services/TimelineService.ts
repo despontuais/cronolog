@@ -50,5 +50,5 @@ export const getTimeline = async (id: number) => {
   };
 
 export const findAll = async () => {
-  return await prisma.timeline.findMany({select: {title: true}})
+  return await prisma.timeline.findMany({select: {title: true, description: true, id: true}})
 }
